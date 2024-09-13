@@ -2,13 +2,11 @@
 title: "About Me"
 ---
 
-This is where you get to write about yourself.
-
-If your favorite color is purple you might show a graph that uses purple.
+My name is Thomas Hudson. I will graduate from Appalachian State University majoring in computer science with minors in mathematics and statistics.
 
 ```{r}
 #| echo: false
 set.seed(123)
-hist(rnorm(10000), col = "purple", main = "Purple Histogram", xlab = "")
+hist(rnorm(10000), col = "red", main = "Red Histogram", xlab = "")
 ```
 
