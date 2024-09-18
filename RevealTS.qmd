@@ -1,0 +1,19 @@
+---
+title: "Combining Data Frames Exercises"
+author: "Thomas Hudson"
+---
+
+importing libraries
+```{r, message= FALSE}
+library(dplyr)
+library(tidybiology)
+```
+
+### Video [here](https://www.youtube.com/watch?v=kLgZYO3tcYA)
+
+## Problem 1.
+```{r}
+happy %>% 
+  left_join(happy_join)
+```
+
