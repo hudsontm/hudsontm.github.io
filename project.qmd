@@ -2,7 +2,7 @@
 title: "Projects"
 ---
 
-* [Project 1](RevealTS.qmd)
+* [Joining tables with left, right, inner, and full joins](RevealTS.qmd)
 * [Project 2]()
 * [Project 3]()
 * [Project 4]()
