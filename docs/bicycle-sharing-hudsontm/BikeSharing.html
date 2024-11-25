@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Thomas Hudson">
+<meta name="keywords" content="R, data viz">
+
+<title>Thomas Hudson - Partial Replication of Bicycle Sharing in Seattle</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Thomas Hudson</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../project.html" rel="" target="">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+    <a href="https://www.linkedin.com/in/thomas-m-hudson/" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-linkedin"></i></a>
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools ms-auto-item" href="https://github.com/hudsontm/hudsontm.github.io">
+            Source Code
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#loading-necessary-packages" id="toc-loading-necessary-packages" class="nav-link" data-scroll-target="#loading-necessary-packages">Loading Necessary Packages</a></li>
+  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">Importing Data</a>
+  <ul class="collapse">
+  <li><a href="#data-structures-and-variables" id="toc-data-structures-and-variables" class="nav-link" data-scroll-target="#data-structures-and-variables">Data Structures and Variables</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#data-visualization" id="toc-data-visualization" class="nav-link" data-scroll-target="#data-visualization">Data Visualization</a>
+  <ul class="collapse">
+  <li><a href="#exploring-the-station-dataset" id="toc-exploring-the-station-dataset" class="nav-link" data-scroll-target="#exploring-the-station-dataset">Exploring the <code>station</code> Dataset</a>
+  <ul class="collapse">
+  <li><a href="#station-installations" id="toc-station-installations" class="nav-link" data-scroll-target="#station-installations">Station Installations</a></li>
+  <li><a href="#current-station-size" id="toc-current-station-size" class="nav-link" data-scroll-target="#current-station-size">Current Station Size</a></li>
+  </ul></li>
+  <li><a href="#exploring-the-trip-dataframe" id="toc-exploring-the-trip-dataframe" class="nav-link" data-scroll-target="#exploring-the-trip-dataframe">Exploring the <code>trip</code> dataframe</a>
+  <ul class="collapse">
+  <li><a href="#plotting-trips-per-month-by-season" id="toc-plotting-trips-per-month-by-season" class="nav-link" data-scroll-target="#plotting-trips-per-month-by-season">Plotting Trips Per Month (By Season)</a></li>
+  <li><a href="#average-trip-duration" id="toc-average-trip-duration" class="nav-link" data-scroll-target="#average-trip-duration">Average Trip Duration</a></li>
+  <li><a href="#number-of-trips-by-day-of-week" id="toc-number-of-trips-by-day-of-week" class="nav-link" data-scroll-target="#number-of-trips-by-day-of-week">Number of Trips by Day of Week</a></li>
+  <li><a href="#number-of-trips-by-time-of-day" id="toc-number-of-trips-by-time-of-day" class="nav-link" data-scroll-target="#number-of-trips-by-time-of-day">Number of Trips by Time of Day</a></li>
+  <li><a href="#number-of-trips-by-member-type" id="toc-number-of-trips-by-member-type" class="nav-link" data-scroll-target="#number-of-trips-by-member-type">Number of Trips by Member Type</a></li>
+  <li><a href="#trip-duration-by-member-type" id="toc-trip-duration-by-member-type" class="nav-link" data-scroll-target="#trip-duration-by-member-type">Trip Duration by Member Type</a></li>
+  <li><a href="#member-demographics" id="toc-member-demographics" class="nav-link" data-scroll-target="#member-demographics">Member Demographics</a></li>
+  </ul></li>
+  <li><a href="#skip-the-trip-routes" id="toc-skip-the-trip-routes" class="nav-link" data-scroll-target="#skip-the-trip-routes">Skip the Trip Routes</a></li>
+  </ul></li>
+  <li><a href="#exploring-the-weather-dataset" id="toc-exploring-the-weather-dataset" class="nav-link" data-scroll-target="#exploring-the-weather-dataset">Exploring the Weather Dataset</a>
+  <ul class="collapse">
+  <li><a href="#temperature" id="toc-temperature" class="nav-link" data-scroll-target="#temperature">Temperature</a></li>
+  <li><a href="#events" id="toc-events" class="nav-link" data-scroll-target="#events">Events</a></li>
+  <li><a href="#combining-weather-and-trip-datasets" id="toc-combining-weather-and-trip-datasets" class="nav-link" data-scroll-target="#combining-weather-and-trip-datasets">Combining Weather and Trip Datasets</a></li>
+  <li><a href="#mean-temperature-vs.-number-of-trips" id="toc-mean-temperature-vs.-number-of-trips" class="nav-link" data-scroll-target="#mean-temperature-vs.-number-of-trips">Mean Temperature vs.&nbsp;Number of Trips</a></li>
+  <li><a href="#precipitation-vs.-number-of-trips" id="toc-precipitation-vs.-number-of-trips" class="nav-link" data-scroll-target="#precipitation-vs.-number-of-trips">Precipitation vs.&nbsp;Number of Trips</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Partial Replication of <a href="https://amber.rbind.io/2016/11/10/bicyclesseattle/">Bicycle Sharing in Seattle</a></h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Thomas Hudson </p>
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://www.appstate.edu/">
+            Appalachian State University
+            </a>
+          </p>
+      </div>
+    </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Last modified on November 25, 2024 13:31:11 Eastern Standard Time</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="abstract-title">Abstract</div>
+    <p>This is a replication of select portions of Amber Thomas’s original post <a href="https://amber.rbind.io/2016/11/10/bicyclesseattle/">Bicycle Sharing in Seattle</a> from November 10, 2016.</p>
+  </div>
+</div>
+
+</header>
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./pics/bikePacking.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Someone is bikepacking!</figcaption>
+</figure>
+</div>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This is an exploration of bicycle-sharing data in the city of Seattle, WA (USA) from <strong>October 2014 - April 2015</strong> not the data Amber used that was <strong>October 2014 - August 2016</strong>. I hope to eventually combine this data with other forms of ride-sharing and transportation in the city, but this will be the first step.</p>
+<p>Time to get started!</p>
+<section id="loading-necessary-packages" class="level2">
+<h2 class="anchored" data-anchor-id="loading-necessary-packages">Loading Necessary Packages</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For data manipulation and tidying</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For mapping</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapproj)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># For data visualizations</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># For modeling and machine learning</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importing-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-data">Importing Data</h2>
+<p>All of the data can be downloaded from <a href="https://www.kaggle.com/pronto/cycle-share-dataset">Kaggle</a>. This project contains 3 data sets and each file is imported and inspected independently using the <code>read.csv()</code> function.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The data from <a href="https://www.kaggle.com/pronto/cycle-share-dataset">Kaggle</a> is not the same data that was originally analyzed by Amber. Specifically, the number of rows in the <code>trip</code> dataset downloaded from Kaggle is 50,793 compared to the 236,065 rows Amber analyzes. The Pronto web site for Seattle is no longer available.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>station <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"./data/station.csv"</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>trip <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"./data/trip.csv"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"./data/weather.csv"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ok, let’s take a look at each of these data files.</p>
+<section id="data-structures-and-variables" class="level3">
+<h3 class="anchored" data-anchor-id="data-structures-and-variables">Data Structures and Variables</h3>
+<section id="station" class="level4">
+<h4 class="anchored" data-anchor-id="station"><code>station</code></h4>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 58
+Columns: 9
+$ station_id        &lt;chr&gt; "BT-01", "BT-03", "BT-04", "BT-05", "CBD-03", "CBD-0…
+$ name              &lt;chr&gt; "3rd Ave &amp; Broad St", "2nd Ave &amp; Vine St", "6th Ave …
+$ lat               &lt;dbl&gt; 47.61842, 47.61583, 47.61609, 47.61311, 47.61073, 47…
+$ long              &lt;dbl&gt; -122.3510, -122.3486, -122.3411, -122.3442, -122.332…
+$ install_date      &lt;chr&gt; "10/13/2014", "10/13/2014", "10/13/2014", "10/13/201…
+$ install_dockcount &lt;int&gt; 18, 16, 16, 14, 20, 18, 20, 20, 20, 18, 16, 16, 18, …
+$ modification_date &lt;chr&gt; "", "", "", "", "", "", "", "11/9/2015", "", "", "8/…
+$ current_dockcount &lt;int&gt; 18, 16, 16, 14, 20, 18, 20, 18, 20, 18, 0, 16, 20, 1…
+$ decommission_date &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "8/9/2016", …</code></pre>
+</div>
+</div>
+<p>There are 9 variables in the data <code>station</code> data frame:</p>
+<ol type="1">
+<li><p><code>station_id</code>: The individual ID number for a bike station</p></li>
+<li><p><code>name</code>: The name of that station ID, also appears to be the rough location of the station</p></li>
+<li><p><code>lat</code>: The latitude of the station</p></li>
+<li><p><code>long</code>: The longitude of the station</p></li>
+<li><p><code>install_date</code>: Date that station was placed in service (MM/DD/YYYY format)</p></li>
+<li><p><code>install_dockcount</code>: Number of docks (bike positions) at each station on the installation date</p></li>
+<li><p><code>modification_date</code>: Date that station was modified, resulting in a change in location or dock count (MM/DD/YYYY format)</p></li>
+<li><p><code>current_dockcount</code>: Number of docks at each station on 8/31/2016</p></li>
+<li><p><code>decommission_date</code>: Date that station was placed out of service (MM/DD/YYYY format)</p></li>
+</ol>
+</section>
+<section id="trip" class="level4">
+<h4 class="anchored" data-anchor-id="trip"><code>trip</code></h4>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 50,793
+Columns: 12
+$ trip_id           &lt;int&gt; 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 44…
+$ starttime         &lt;chr&gt; "10/13/2014 10:31", "10/13/2014 10:32", "10/13/2014 …
+$ stoptime          &lt;chr&gt; "10/13/2014 10:48", "10/13/2014 10:48", "10/13/2014 …
+$ bikeid            &lt;chr&gt; "SEA00298", "SEA00195", "SEA00486", "SEA00333", "SEA…
+$ tripduration      &lt;dbl&gt; 985.935, 926.375, 883.831, 865.937, 923.923, 808.805…
+$ from_station_name &lt;chr&gt; "2nd Ave &amp; Spring St", "2nd Ave &amp; Spring St", "2nd A…
+$ to_station_name   &lt;chr&gt; "Occidental Park / Occidental Ave S &amp; S Washington S…
+$ from_station_id   &lt;chr&gt; "CBD-06", "CBD-06", "CBD-06", "CBD-06", "CBD-06", "C…
+$ to_station_id     &lt;chr&gt; "PS-04", "PS-04", "PS-04", "PS-04", "PS-04", "PS-04"…
+$ usertype          &lt;chr&gt; "Member", "Member", "Member", "Member", "Member", "M…
+$ gender            &lt;chr&gt; "Male", "Male", "Female", "Female", "Male", "Male", …
+$ birthyear         &lt;int&gt; 1960, 1970, 1988, 1977, 1971, 1974, 1978, 1983, 1974…</code></pre>
+</div>
+</div>
+<p>There are 12 variables in the <code>trip</code> data frame.</p>
+<ol type="1">
+<li><p><code>trip_id</code>: An identification number assigned to each trip (from one bike station to another)</p></li>
+<li><p><code>starttime</code>: The time and date that a bike was borrowed from a station (in MM/DD/YYYY HH:MM format)</p></li>
+<li><p><code>stoptime</code>: The time and date that a bike was returned to a station (in MM/DD/YYYY HH:MM format)</p></li>
+<li><p><code>bikeid</code>: The identification number for a specific bike</p></li>
+<li><p><code>tripduration</code>: Time of trip (measured in seconds)</p></li>
+<li><p><code>from_station_name</code>: The name of the station where the bike was borrowed from</p></li>
+<li><p><code>to_station_name</code>: The name of the station where the bike was returned to</p></li>
+<li><p><code>from_station_id</code>: The ID number of the station where the bike was borrowed from</p></li>
+<li><p><code>to_station_id</code>: The ID number of the station where the bike was returned to</p></li>
+<li><p><code>usertype</code>: Indicates whether the user was a Member’’ (i.e., someone with a monthly or annual membership to Pronto!) or aShort-Term Pass Holder’’ (i.e., someone who purchased a 24 hour or 3 day pass)</p></li>
+<li><p><code>gender</code>: The gender of the rider (if known)</p></li>
+<li><p><code>birthyear</code>: The year that the rider was born</p></li>
+</ol>
+</section>
+<section id="weather" class="level4">
+<h4 class="anchored" data-anchor-id="weather"><code>weather</code></h4>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 689
+Columns: 21
+$ Date                       &lt;chr&gt; "10/13/2014", "10/14/2014", "10/15/2014", "…
+$ Max_Temperature_F          &lt;int&gt; 71, 63, 62, 71, 64, 68, 73, 66, 64, 60, 62,…
+$ Mean_Temperature_F         &lt;int&gt; 62, 59, 58, 61, 60, 64, 64, 60, 58, 58, 55,…
+$ Min_TemperatureF           &lt;int&gt; 54, 55, 54, 52, 57, 59, 55, 55, 55, 57, 50,…
+$ Max_Dew_Point_F            &lt;int&gt; 55, 52, 53, 49, 55, 59, 57, 57, 52, 55, 49,…
+$ MeanDew_Point_F            &lt;int&gt; 51, 51, 50, 46, 51, 57, 55, 54, 49, 53, 47,…
+$ Min_Dewpoint_F             &lt;int&gt; 46, 50, 46, 42, 41, 55, 53, 50, 46, 48, 44,…
+$ Max_Humidity               &lt;int&gt; 87, 88, 87, 83, 87, 90, 94, 90, 87, 88, 86,…
+$ Mean_Humidity              &lt;int&gt; 68, 78, 77, 61, 72, 83, 74, 78, 70, 81, 76,…
+$ Min_Humidity               &lt;int&gt; 46, 63, 67, 36, 46, 68, 52, 67, 58, 67, 62,…
+$ Max_Sea_Level_Pressure_In  &lt;dbl&gt; 30.03, 29.84, 29.98, 30.03, 29.83, 29.96, 2…
+$ Mean_Sea_Level_Pressure_In &lt;dbl&gt; 29.79, 29.75, 29.71, 29.95, 29.78, 29.90, 2…
+$ Min_Sea_Level_Pressure_In  &lt;dbl&gt; 29.65, 29.54, 29.51, 29.81, 29.73, 29.80, 2…
+$ Max_Visibility_Miles       &lt;int&gt; 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,…
+$ Mean_Visibility_Miles      &lt;int&gt; 10, 9, 9, 10, 10, 8, 10, 10, 10, 6, 10, 10,…
+$ Min_Visibility_Miles       &lt;int&gt; 4, 3, 3, 10, 6, 2, 6, 5, 6, 2, 10, 8, 6, 10…
+$ Max_Wind_Speed_MPH         &lt;int&gt; 13, 10, 18, 9, 8, 10, 10, 12, 15, 14, 15, 8…
+$ Mean_Wind_Speed_MPH        &lt;int&gt; 4, 5, 7, 4, 3, 4, 3, 5, 8, 8, 9, 4, 6, 12, …
+$ Max_Gust_Speed_MPH         &lt;chr&gt; "21", "17", "25", "-", "-", "-", "18", "-",…
+$ Precipitation_In           &lt;dbl&gt; 0.00, 0.11, 0.45, 0.00, 0.14, 0.31, 0.00, 0…
+$ Events                     &lt;chr&gt; "Rain", "Rain", "Rain", "Rain", "Rain", "Ra…</code></pre>
+</div>
+</div>
+<p>There are 21 variables in the <code>weather</code> data frame:</p>
+<ol type="1">
+<li><p><code>Date</code>: The date in MM/DD/YYYY format</p></li>
+<li><p><code>Max_Temperature_F</code>: The maximum temperature that day (in degrees F)</p></li>
+<li><p><code>Mean_Temperature_F</code>: The average temperature that day (in degrees F)</p></li>
+<li><p><code>Min_TemperatureF</code> : The minimum temperature that day (in degrees F)</p></li>
+<li><p><code>Max_Dew_Point_F</code>: The maximum dew point (in degrees F)</p></li>
+<li><p><code>MeanDew_Point_F</code>: The average dew point (in degrees F)</p></li>
+<li><p><code>Min_Dewpoint_F</code> : The minimum dew point (in degrees F)</p></li>
+<li><p><code>Max_Humidity</code>: The maximum humidity (in %)</p></li>
+<li><p><code>Mean_Humidity</code>: The average humidity (in %)</p></li>
+<li><p><code>Min_Humidity</code>: The minimum humidity (in %)</p></li>
+<li><p><code>Maximum_Sea_Level_Pressure_In</code> : The maximum atmospheric pressure at sea level (in inches of mercury)</p></li>
+<li><p><code>Mean_Sea_Level_Pressure_In</code>: The average atmospheric pressure at sea level (in inches of mercury)</p></li>
+<li><p><code>Min_Sea_Level_Pressure_In</code>: The minimum atmospheric pressure at sea level (in inches of mercury)</p></li>
+<li><p><code>Max_Visibility_Miles</code>: The maximum visibility (in miles)</p></li>
+<li><p><code>Mean_Visibility_Miles</code>: The average visibility (in miles)</p></li>
+<li><p><code>Min_Visibility_Miles</code>: The minimum visibility (in miles)</p></li>
+<li><p><code>Max_Wind_Speed_MPH</code>: The maximum sustained wind speed (in miles per hour)</p></li>
+<li><p><code>Mean_Wind_Speed_MPH</code>: The average sustained wind speed (in miles per hour)</p></li>
+<li><p><code>Max_Gust_Speed_MPH</code>: The maximum gust wind speed (in miles per hour)</p></li>
+<li><p><code>Precipitation_In</code>: The amount of precipitation (measured in inches)</p></li>
+<li><p><code>Events</code>: Weather events that occurred that day (e.g., rain, fog, snow, thunderstorm etc.)</p></li>
+</ol>
+</section>
+</section>
+</section>
+</section>
+<section id="data-visualization" class="level1">
+<h1>Data Visualization</h1>
+<section id="exploring-the-station-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-station-dataset">Exploring the <code>station</code> Dataset</h2>
+<p>Since the <code>station</code> dataset was the first one imported, let’s start with a little exploration there. First of all, how many unique stations are we dealing with?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>S1 <span class="ot">&lt;-</span> station <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">nds =</span> <span class="fu">n_distinct</span>(station_id))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>S1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  nds
+1  58</code></pre>
+</div>
+</div>
+<p>There are 58 different stations. <strong>?@fig-map1</strong> shows where the stations are located.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>station <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(station_id) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 9
+# Groups:   station_id [6]
+  station_id name     lat  long install_date install_dockcount modification_date
+  &lt;chr&gt;      &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                    &lt;int&gt; &lt;chr&gt;            
+1 BT-01      3rd A…  47.6 -122. 10/13/2014                  18 ""               
+2 BT-03      2nd A…  47.6 -122. 10/13/2014                  16 ""               
+3 BT-04      6th A…  47.6 -122. 10/13/2014                  16 ""               
+4 BT-05      2nd A…  47.6 -122. 10/13/2014                  14 ""               
+5 CBD-03     7th A…  47.6 -122. 10/13/2014                  20 ""               
+6 CBD-04     Union…  47.6 -122. 7/27/2015                   18 ""               
+# ℹ 2 more variables: current_dockcount &lt;int&gt;, decommission_date &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>station_locs <span class="ot">&lt;-</span> station <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(station_id) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(station_id, lat, long)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>station_locs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 58 × 3
+# Groups:   station_id [58]
+   station_id   lat  long
+   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;
+ 1 BT-01       47.6 -122.
+ 2 BT-03       47.6 -122.
+ 3 BT-04       47.6 -122.
+ 4 BT-05       47.6 -122.
+ 5 CBD-03      47.6 -122.
+ 6 CBD-04      47.6 -122.
+ 7 CBD-05      47.6 -122.
+ 8 CBD-06      47.6 -122.
+ 9 CBD-07      47.6 -122.
+10 CBD-13      47.6 -122.
+# ℹ 48 more rows</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-map1</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Seattle bike station locations"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the correct map</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># mymap &lt;- get_map(location = "Seattle", maptype = "roadmap", zoom = 12)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot a single point for each Station ID</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ggmap(mymap) + geom_point(aes(x = long, y = lat), data = station_locs, </span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    alpha = 0.7, color = "darkred", size = 2)</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So it looks like all of the stations are located near the Lower Queen Anne, Belltown, International District, Capitol Hill and University of Washington areas. <strong>?@fig-mymap2</strong> provides a more zoomed-in view of the bike station locations.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mymap2</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Zoomed in view of Seattle bike station locations"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># mymap2 &lt;- get_map(location = c(lon = -122.32, lat = 47.63),</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># maptype = "roadmap", zoom = 13)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot a single point for each Station ID</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ggmap(mymap2) + geom_point(</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   aes(x = long, y = lat),</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   data = station_locs,</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   alpha = 0.5,</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   color = "red",</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   size = 2</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The bike locations appear clustered in <strong>?@fig-mymap2</strong>. It would be interesting to know the order the stations were added.</p>
+<section id="station-installations" class="level3">
+<h3 class="anchored" data-anchor-id="station-installations">Station Installations</h3>
+<p>First, let’s convert those character-string date objects to actual dates using the <code>lubridate</code> package.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>station<span class="sc">$</span>install_date <span class="ot">&lt;-</span> <span class="fu">mdy</span>(station<span class="sc">$</span>install_date)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># How many times were new stations installed?</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>station <span class="sc">|&gt;</span>  </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">n_distinct</span>(install_date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  n_distinct(install_date)
+1                        9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How many stations were installed on each date?</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>station <span class="sc">|&gt;</span>  </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(install_date) <span class="sc">|&gt;</span>  </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span>  </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(install_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 2
+  install_date count
+  &lt;date&gt;       &lt;int&gt;
+1 2014-10-13      50
+2 2015-05-22       1
+3 2015-06-12       1
+4 2015-07-27       1
+5 2015-09-15       1
+6 2015-10-29       1
+7 2016-03-18       1
+8 2016-07-03       1
+9 2016-08-09       1</code></pre>
+</div>
+</div>
+<p>The majority (86.21%) of the stations were added on opening day. <strong>?@fig-mymap3</strong> shows the location of the original bike stations and <strong>?@fig-mymap4</strong> shows the location and date additional bike stations were added.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mymap3</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Original bike stations"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot a single point for each Station ID originally installed 2014-10-13</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ggmap(mymap2) +</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point(</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     aes(x = long, y = lat),</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     data = subset(station, install_date == "2014-10-13"),</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     alpha = 0.5,</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     color = "red",</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     size = 2</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mymap4</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Subsequently added bike stations"</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ggmap(mymap2) +</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point(</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     aes(</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#       x = long,</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#       y = lat,</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#       color = factor(install_date)</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     ),</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     data = subset(station, install_date != "2014-10-13"),</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     size = 3</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   ) +</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend.position = c(0.95, 0.05),</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     legend.justification = c(0.95, 0.05)</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   ) +</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(color = "Install Date")</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So they added more stations throughout the district that they serve, instead of adding several new stations to a single neighborhood all at once. Good to know.</p>
+<p>The number of bikes parked at each station (as of August 31, 2016) is shown in <a href="#fig-graph1">Figure&nbsp;1</a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph1-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Bar graph showing that most bike stations currently house between 14 and 20 bikes.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Well that’s weird, some of the stations have a dock count of 0. I’m assuming they didn’t start that way. Let’s calculate the change in dock count from station installation to August 31, 2016 and plot it in <strong>?@fig-change</strong>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dock_change <span class="ot">&lt;-</span> station  <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(station_id)  <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(station_id, long, lat, <span class="fu">ends_with</span>(<span class="st">"dockcount"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dock_change =</span> current_dockcount <span class="sc">-</span> install_dockcount)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>11 stations lost bike docks, 39 stayed the same, and 8 stations gained docks.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span> dock_change, <span class="at">data =</span> dock_change)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dock_change
+-20 -16  -6  -4  -2   0   2   4   6   8 
+  1   3   2   1   4  39   4   2   1   1 </code></pre>
+</div>
+</div>
+</section>
+<section id="current-station-size" class="level3">
+<h3 class="anchored" data-anchor-id="current-station-size">Current Station Size</h3>
+<p><strong>?@fig-size</strong> examines the current size of each station.</p>
+<p>So it looks like the biggest stations tend to be on the outskirts of the rest. Where there are several stations in close proximity, there tend to be fewer bike docks at each station. That makes sense, logically speaking. If you go to a station and there is no bike to rent, you can easily go to another nearby, assuming there is another nearby. In areas where the stations are more secluded, it’s more important that there be bikes and open spaces readily available for users.</p>
+<p>Alright, I’m feeling good about exploring this dataset. Time to check out the trip dataset!</p>
+</section>
+</section>
+<section id="exploring-the-trip-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-trip-dataframe">Exploring the <code>trip</code> dataframe</h2>
+<p>A <code>glimpse</code> of the <code>trip</code> data frame is provided below.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 50,793
+Columns: 12
+$ trip_id           &lt;int&gt; 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 44…
+$ starttime         &lt;chr&gt; "10/13/2014 10:31", "10/13/2014 10:32", "10/13/2014 …
+$ stoptime          &lt;chr&gt; "10/13/2014 10:48", "10/13/2014 10:48", "10/13/2014 …
+$ bikeid            &lt;chr&gt; "SEA00298", "SEA00195", "SEA00486", "SEA00333", "SEA…
+$ tripduration      &lt;dbl&gt; 985.935, 926.375, 883.831, 865.937, 923.923, 808.805…
+$ from_station_name &lt;chr&gt; "2nd Ave &amp; Spring St", "2nd Ave &amp; Spring St", "2nd A…
+$ to_station_name   &lt;chr&gt; "Occidental Park / Occidental Ave S &amp; S Washington S…
+$ from_station_id   &lt;chr&gt; "CBD-06", "CBD-06", "CBD-06", "CBD-06", "CBD-06", "C…
+$ to_station_id     &lt;chr&gt; "PS-04", "PS-04", "PS-04", "PS-04", "PS-04", "PS-04"…
+$ usertype          &lt;chr&gt; "Member", "Member", "Member", "Member", "Member", "M…
+$ gender            &lt;chr&gt; "Male", "Male", "Female", "Female", "Male", "Male", …
+$ birthyear         &lt;int&gt; 1960, 1970, 1988, 1977, 1971, 1974, 1978, 1983, 1974…</code></pre>
+</div>
+</div>
+<p>Great, so there are quite a few things that we can potentially look at using this dataset by itself. Let’s start with the number of trips per day since Pronto! began opening bike stations. To do that, we need to recode our start date/times as <code>POSIXct</code> objects. We’ll use the <code>lubridate</code> package for this.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the start and stop dates into POSIXct objects</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>trip_2 <span class="ot">&lt;-</span> trip <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">start_dt =</span> <span class="fu">mdy_hm</span>(starttime),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">stop_dt =</span> <span class="fu">mdy_hm</span>(stoptime))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode the dates</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>trip_2 <span class="ot">&lt;-</span> trip_2 <span class="sc">|&gt;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">start_date =</span> <span class="fu">paste</span>(<span class="fu">month</span>(start_dt),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>         <span class="fu">day</span>(start_dt), <span class="fu">year</span>(start_dt), <span class="at">sep =</span> <span class="st">"/"</span>))</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>trip_2<span class="sc">$</span>start_date <span class="ot">&lt;-</span> <span class="fu">mdy</span>(trip_2<span class="sc">$</span>start_date)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>trip_2 <span class="ot">&lt;-</span> trip_2 <span class="sc">|&gt;</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stop_date =</span> <span class="fu">paste</span>(<span class="fu">month</span>(stop_dt),</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">day</span>(stop_dt), <span class="fu">year</span>(stop_dt), <span class="at">sep =</span> <span class="st">"/"</span>))</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>trip_2<span class="sc">$</span>stop_date <span class="ot">&lt;-</span> <span class="fu">mdy</span>(trip_2<span class="sc">$</span>stop_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Great! The number of rides per day is shown in <a href="#fig-graph2">Figure&nbsp;2</a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Line graph with LOESS smoother showing daily fluctuations in the number of trips made per day.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="plotting-trips-per-month-by-season" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-trips-per-month-by-season">Plotting Trips Per Month (By Season)</h3>
+<p>First, we create a “Year-Month” variable as well as a “Season” variable.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>start_date_ym <span class="ot">&lt;-</span> trip_2  <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ym =</span> <span class="fu">paste</span>(<span class="fu">year</span>(start_date),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">month</span>(start_date),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">sep =</span> <span class="st">"/"</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Season =</span> <span class="fu">case_when</span>(</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>      ym <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2014/10"</span>, <span class="st">"2014/11"</span>) <span class="sc">~</span> <span class="st">"Fall"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>      ym <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2014/12"</span>, <span class="st">"2015/1"</span>, <span class="st">"2015/2"</span>) <span class="sc">~</span> <span class="st">"Winter"</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>      ym <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2015/3"</span>, <span class="st">"2015/4"</span>, <span class="st">"2015/5"</span>) <span class="sc">~</span> <span class="st">"Spring"</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now plot. I think I’ll plot this by month but color it by season (where December, January, and February are “Winter”, March, April, and May are “Spring”, and October, and November are “Fall”).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: Line graph showing the number of trips taken per month over the course of the year and colored by season.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Well the kaggle data is quite different from the data used by Amber!</p>
+</section>
+<section id="average-trip-duration" class="level3">
+<h3 class="anchored" data-anchor-id="average-trip-duration">Average Trip Duration</h3>
+<p>Great! I wonder how the average trip duration fluctuates over this time period.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Trip Duration from Seconds to Minutes</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Trip_Duration_Month <span class="ot">&lt;-</span> start_date_ym <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trip_duration_min =</span> tripduration <span class="sc">/</span> <span class="dv">60</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ym) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ym, trip_duration_min, Season) <span class="sc">|&gt;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Avg =</span> <span class="fu">mean</span>(trip_duration_min),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(trip_duration_min)) <span class="sc">|&gt;</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> sd <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>()),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Season =</span> <span class="fu">case_when</span>(</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>      ym <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2014/10"</span>, <span class="st">"2014/11"</span>) <span class="sc">~</span> <span class="st">"Fall"</span>,</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>      ym <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2014/12"</span>, <span class="st">"2015/1"</span>, <span class="st">"2015/2"</span>) <span class="sc">~</span> <span class="st">"Winter"</span>,</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>      ym <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2015/3"</span>, <span class="st">"2015/4"</span>, <span class="st">"2015/5"</span>) <span class="sc">~</span> <span class="st">"Spring"</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now to plot the average trip duration (in minutes) (<span class="math inline">\(\pm SE\)</span>)), with colors indicating seasons.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph4" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph4-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: A line graph showing the duration (with standard error bars) of the average trip per month, colored for each season.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="number-of-trips-by-day-of-week" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-trips-by-day-of-week">Number of Trips by Day of Week</h3>
+<p>I wonder if people are using this service to commute to/from work. Let’s look at the number of trips by day of the week.</p>
+<p>First, let’s create a Day of the Week variable.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>start_date_ym<span class="sc">$</span>wd <span class="ot">&lt;-</span> <span class="fu">wday</span>(start_date_ym<span class="sc">$</span>start_date, <span class="at">label =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph5" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5: A line graph showing number of trips taken by day of the week. There are more trips taken Monday - Friday.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Ok, so there are definitely more trips during the week than on the weekends. I wonder if this varies by season too.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph6" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph6-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6: Line graph with a line for each season showing the number of trips taken by day of the week.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>So it looks like usage is some what consistent across Winter and Spring, at least as far as the number of trips are concerned.</p>
+</section>
+<section id="number-of-trips-by-time-of-day" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-trips-by-time-of-day">Number of Trips by Time of Day</h3>
+<p>How about time of day? Are people using the bikes around commuting times during the week and later in the day on weekends?</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph7" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph7-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;7: Seven, side-by-side graphs one for each day of the week. Each has a separate line for each of the three seasons, showing activity by hour of the day. Weekdays have spikes during rush hour and weekends are consistent throughout the day.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Wow, looks like regardless of the season, people are commuting to/from work using this service (there’s a spike between 8 and 10 AM and another between 4 and 7 PM Monday through Friday). But the weekends seem to be popular between 10 AM and 6 PM.</p>
+</section>
+<section id="number-of-trips-by-member-type" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-trips-by-member-type">Number of Trips by Member Type</h3>
+<p>I wonder if different types of members (those who have a membership vs.&nbsp;those that bought a 24 hour or 3 day pass) vary in the number of trips they take.</p>
+<p>If I were to guess, I’d think the short-term passes would be ideal for tourists or people looking for a quick weekend trip, whereas members may be more likely to continue using the service year-round. Let’s check out my assumptions by plotting, once again colored by season.</p>
+<p>TODO: workout compilation error in creation of <code>tripsPer_Month_UT</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph8" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph8-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;8: Line graph with 2 lines, one showing the number of trips per month, colored by season, for members, and one showing the number of trips per month, colored by season, for short-term pass holders. The shape is similar, but short-term passholders take fewer trips every month.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Different types of users (Member, Short-Term Pass Holder) seem to follow similar patterns of usage.</p>
+</section>
+<section id="trip-duration-by-member-type" class="level3">
+<h3 class="anchored" data-anchor-id="trip-duration-by-member-type">Trip Duration by Member Type</h3>
+<p>While it may seem that the trip duration shouldn’t vary widely by member type, a historical understanding of Pronto!’s pricing structure may make you reconsider that assumption. You see, while you have to purchase either an annual membership ($85/year), a 24-Hour Pass ($8) or a 3-Day Pass ($16) there is still a cap on the duration of your trip. For members, any ride under 45 minutes is free, but any ride going over 45 minutes will incur a fee of $2 for every additional 30 minutes. For short-term users, any ride under 30 minutes is free, but going over that time limit would cost you an additional $2 for the first 30 minutes and $5 for each additional 30 minutes after that!</p>
+<p>Let’s see if these time limits cause differing behaviors in our users.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>start_date_ym <span class="sc">|&gt;</span>  </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(usertype <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">group_by</span>(usertype) <span class="sc">|&gt;</span>  </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">summarize</span>(<span class="at">Trips =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>   knitr<span class="sc">::</span><span class="fu">kable</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">usertype</th>
+<th style="text-align: right;">Trips</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Member</td>
+<td style="text-align: right;">35386</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Short-Term Pass Holder</td>
+<td style="text-align: right;">15406</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>start_date_ym <span class="ot">&lt;-</span> start_date_ym <span class="sc">|&gt;</span>  </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(usertype <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">tripduration_min =</span> tripduration<span class="sc">/</span><span class="dv">60</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>TODO: Change theme to match, but I have the raw graph done.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph9" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph9-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;9: Two side-by-side histograms, showing member and short term pass holder trip duration with a black dotted line indicating the time when fees start accruing. Short-Term Pass Holders take a wider range of trip lengths and pay more fees.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Ok, so our members are pretty good about making sure that they return their bike before they incur extra charges, but the short-term pass holders frequently go over their time limit. I wonder how the cost of a trip varies for members and pass holders. Let’s try to calculate the cost of a trip.</p>
+<p>Need to compute cost properly!</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>start_date_ym <span class="ot">&lt;-</span> start_date_ym  <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cost =</span> <span class="fu">ifelse</span>(usertype <span class="sc">==</span> <span class="st">"Member"</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&lt;=</span> <span class="dv">45</span>, <span class="dv">0</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(usertype <span class="sc">==</span> <span class="st">"Member"</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&gt;</span> <span class="dv">45</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&lt;=</span> <span class="dv">75</span>, <span class="dv">2</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ifelse</span>(usertype <span class="sc">==</span> <span class="st">"Member"</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&gt;</span> <span class="dv">75</span>, (<span class="dv">2</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">ceiling</span>((tripduration_min <span class="sc">-</span> <span class="dv">75</span>) <span class="sc">/</span> <span class="dv">30</span>)),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ifelse</span>(usertype <span class="sc">==</span> <span class="st">"Short-Term Pass Holder"</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&lt;=</span> <span class="dv">30</span>, <span class="dv">0</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>          <span class="fu">ifelse</span>(usertype <span class="sc">==</span> <span class="st">"Short-Term Pass Holder"</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&gt;</span> <span class="dv">30</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&lt;</span> <span class="dv">60</span>, <span class="dv">2</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(usertype <span class="sc">==</span> <span class="st">"Short-Term Pass Holder"</span> <span class="sc">&amp;</span> tripduration_min <span class="sc">&gt;</span> <span class="dv">60</span>, (<span class="dv">2</span> <span class="sc">+</span> <span class="dv">5</span> <span class="sc">*</span> <span class="fu">ceiling</span>((tripduration_min <span class="sc">-</span> <span class="dv">60</span>) <span class="sc">/</span> <span class="dv">30</span>)), <span class="cn">NA</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>That was a complicated nested if/else statement! Let’s see how much these folks are paying in additional fees!</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph10" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph10-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;10: Two bar graphs side by side, showing member and short-term pass holder fee paying behavior. Short-term pass holders pay more fees.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Looks like short-term pass holders (who are already paying a higher price per day of biking), are also paying lots of extra fees. This could be because they are unfamiliar with the pricing structure and don’t realize they need to return their bike to a station within 30 minutes without getting charged. It is also possible that short-term users may be tourists who don’t know their way around as easily, and thus can’t find their way to a station within the time limit.</p>
+</section>
+<section id="member-demographics" class="level3">
+<h3 class="anchored" data-anchor-id="member-demographics">Member Demographics</h3>
+<p>We only seem to have age and gender information about people who have an annual Pronto! membership, so we can at least take a look at what types of people use this service.</p>
+<p>Let’s look first at age.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>start_date_ym <span class="ot">&lt;-</span> start_date_ym <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">year</span>(start_dt) <span class="sc">-</span> birthyear)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>start_date_ym <span class="sc">|&gt;</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">q25 =</span> <span class="fu">quantile</span>(age, .<span class="dv">25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">q75 =</span> <span class="fu">quantile</span>(age, .<span class="dv">75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  q25 q75
+1  28  41</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> start_date_ym, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">binwidth =</span> <span class="dv">2</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age in years"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-graph11" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph11-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;11: Histogram showing that the middle 50% of riders are between the ages of 28 and 41.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>My first instinct here is to say “Wow! There’s a lot of 30-somethings that use this service!” But this figure (and these data) may be a little misleading. You see, we don’t have any sort of Rider ID number, meaning we can’t take “individual activity level” into account. So we can’t tell if the tallest spike is because 6 very athletic 28-year-olds went on 1,000 trips each, or if 100 people went on 60 trips each, or if there were 6,000 28-year-olds who each only used the service once.</p>
+<p>The same problem would arise if we looked at gender, so I’m just going to move beyond demographics.</p>
+<hr>
+</section>
+</section>
+<section id="skip-the-trip-routes" class="level2">
+<h2 class="anchored" data-anchor-id="skip-the-trip-routes">Skip the Trip Routes</h2>
+<hr>
+</section>
+</section>
+<section id="exploring-the-weather-dataset" class="level1">
+<h1>Exploring the Weather Dataset</h1>
+<p>Now that I’ve visualized all that I can think of in terms of the “trips”” dataset, it’s time to take a brief look at the weather dataset.</p>
+<p>Let’s get a quick reminder of what we’re looking at here.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 689
+Columns: 21
+$ Date                       &lt;chr&gt; "10/13/2014", "10/14/2014", "10/15/2014", "…
+$ Max_Temperature_F          &lt;int&gt; 71, 63, 62, 71, 64, 68, 73, 66, 64, 60, 62,…
+$ Mean_Temperature_F         &lt;int&gt; 62, 59, 58, 61, 60, 64, 64, 60, 58, 58, 55,…
+$ Min_TemperatureF           &lt;int&gt; 54, 55, 54, 52, 57, 59, 55, 55, 55, 57, 50,…
+$ Max_Dew_Point_F            &lt;int&gt; 55, 52, 53, 49, 55, 59, 57, 57, 52, 55, 49,…
+$ MeanDew_Point_F            &lt;int&gt; 51, 51, 50, 46, 51, 57, 55, 54, 49, 53, 47,…
+$ Min_Dewpoint_F             &lt;int&gt; 46, 50, 46, 42, 41, 55, 53, 50, 46, 48, 44,…
+$ Max_Humidity               &lt;int&gt; 87, 88, 87, 83, 87, 90, 94, 90, 87, 88, 86,…
+$ Mean_Humidity              &lt;int&gt; 68, 78, 77, 61, 72, 83, 74, 78, 70, 81, 76,…
+$ Min_Humidity               &lt;int&gt; 46, 63, 67, 36, 46, 68, 52, 67, 58, 67, 62,…
+$ Max_Sea_Level_Pressure_In  &lt;dbl&gt; 30.03, 29.84, 29.98, 30.03, 29.83, 29.96, 2…
+$ Mean_Sea_Level_Pressure_In &lt;dbl&gt; 29.79, 29.75, 29.71, 29.95, 29.78, 29.90, 2…
+$ Min_Sea_Level_Pressure_In  &lt;dbl&gt; 29.65, 29.54, 29.51, 29.81, 29.73, 29.80, 2…
+$ Max_Visibility_Miles       &lt;int&gt; 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,…
+$ Mean_Visibility_Miles      &lt;int&gt; 10, 9, 9, 10, 10, 8, 10, 10, 10, 6, 10, 10,…
+$ Min_Visibility_Miles       &lt;int&gt; 4, 3, 3, 10, 6, 2, 6, 5, 6, 2, 10, 8, 6, 10…
+$ Max_Wind_Speed_MPH         &lt;int&gt; 13, 10, 18, 9, 8, 10, 10, 12, 15, 14, 15, 8…
+$ Mean_Wind_Speed_MPH        &lt;int&gt; 4, 5, 7, 4, 3, 4, 3, 5, 8, 8, 9, 4, 6, 12, …
+$ Max_Gust_Speed_MPH         &lt;chr&gt; "21", "17", "25", "-", "-", "-", "18", "-",…
+$ Precipitation_In           &lt;dbl&gt; 0.00, 0.11, 0.45, 0.00, 0.14, 0.31, 0.00, 0…
+$ Events                     &lt;chr&gt; "Rain", "Rain", "Rain", "Rain", "Rain", "Ra…</code></pre>
+</div>
+</div>
+<p>Great, let’s change the Date variable to a <code>POSIXct</code> object, and make the <code>Events</code> variable factors.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusting the Date Variable</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">mdy</span>(weather<span class="sc">$</span>Date)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusting the Events Variable</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Events <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(weather<span class="sc">$</span>Events)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Great. Now how many weather events are there?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(weather<span class="sc">$</span>Events)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] ""                    "Fog"                 "Fog , Rain"         
+ [4] "Fog-Rain"            "Rain"                "Rain , Snow"        
+ [7] "Rain , Thunderstorm" "Rain-Snow"           "Rain-Thunderstorm"  
+[10] "Snow"               </code></pre>
+</div>
+</div>
+<p>Wow! So mostly combinations of rain.</p>
+<p>Let’s combine a few of these things that seem to represent the same event.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Events <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"Fog , Rain|Fog-Rain"</span>, <span class="st">"Fog-Rain"</span>, weather<span class="sc">$</span>Events)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Events <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"Rain , Snow|Rain-Snow"</span>, <span class="st">"Rain-Snow"</span>, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    weather<span class="sc">$</span>Events)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Events <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"Rain , Thunderstorm|Rain-Thunderstorm"</span>, </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rain-TS"</span>, weather<span class="sc">$</span>Events)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Events <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(weather<span class="sc">$</span>Events)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(weather<span class="sc">$</span>Events)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] ""          "Fog"       "Fog-Rain"  "Rain"      "Rain-Snow" "Rain-TS"  
+[7] "Snow"     </code></pre>
+</div>
+</div>
+<p>Where else does this dataset need to be cleaned up? Let’s look for any missing values.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(weather)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Date            Max_Temperature_F Mean_Temperature_F Min_TemperatureF
+ Min.   :2014-10-13   Min.   :39.00     Min.   :33.00      Min.   :23.00   
+ 1st Qu.:2015-04-03   1st Qu.:55.00     1st Qu.:48.00      1st Qu.:43.00   
+ Median :2015-09-22   Median :63.00     Median :56.00      Median :50.00   
+ Mean   :2015-09-22   Mean   :64.03     Mean   :56.58      Mean   :49.45   
+ 3rd Qu.:2016-03-12   3rd Qu.:73.00     3rd Qu.:65.00      3rd Qu.:57.00   
+ Max.   :2016-08-31   Max.   :98.00     Max.   :83.00      Max.   :70.00   
+                                        NA's   :1                          
+ Max_Dew_Point_F MeanDew_Point_F Min_Dewpoint_F   Max_Humidity   
+ Min.   :10.00   Min.   : 4.00   Min.   : 1.00   Min.   : 40.00  
+ 1st Qu.:44.00   1st Qu.:41.00   1st Qu.:36.00   1st Qu.: 78.00  
+ Median :50.00   Median :46.00   Median :42.00   Median : 86.00  
+ Mean   :48.57   Mean   :45.02   Mean   :40.87   Mean   : 84.54  
+ 3rd Qu.:54.00   3rd Qu.:51.00   3rd Qu.:47.00   3rd Qu.: 90.00  
+ Max.   :77.00   Max.   :59.00   Max.   :57.00   Max.   :100.00  
+                                                                 
+ Mean_Humidity    Min_Humidity   Max_Sea_Level_Pressure_In
+ Min.   :24.00   Min.   :15.00   Min.   :29.47            
+ 1st Qu.:60.00   1st Qu.:38.00   1st Qu.:30.01            
+ Median :70.00   Median :50.00   Median :30.12            
+ Mean   :68.51   Mean   :49.97   Mean   :30.12            
+ 3rd Qu.:79.00   3rd Qu.:63.00   3rd Qu.:30.24            
+ Max.   :95.00   Max.   :87.00   Max.   :30.86            
+                                                          
+ Mean_Sea_Level_Pressure_In Min_Sea_Level_Pressure_In Max_Visibility_Miles
+ Min.   :29.31              Min.   :29.14             Min.   : 3.00       
+ 1st Qu.:29.93              1st Qu.:29.84             1st Qu.:10.00       
+ Median :30.04              Median :29.96             Median :10.00       
+ Mean   :30.03              Mean   :29.94             Mean   : 9.99       
+ 3rd Qu.:30.16              3rd Qu.:30.08             3rd Qu.:10.00       
+ Max.   :30.81              Max.   :30.75             Max.   :10.00       
+                                                                          
+ Mean_Visibility_Miles Min_Visibility_Miles Max_Wind_Speed_MPH
+ Min.   : 1.00         Min.   : 0.000       Min.   : 4.00     
+ 1st Qu.: 9.00         1st Qu.: 4.000       1st Qu.: 8.00     
+ Median :10.00         Median : 9.000       Median :10.00     
+ Mean   : 9.43         Mean   : 7.245       Mean   :11.09     
+ 3rd Qu.:10.00         3rd Qu.:10.000       3rd Qu.:13.00     
+ Max.   :10.00         Max.   :10.000       Max.   :30.00     
+                                                              
+ Mean_Wind_Speed_MPH Max_Gust_Speed_MPH Precipitation_In       Events   
+ Min.   : 0.000      Length:689         Min.   :0.0000            :361  
+ 1st Qu.: 3.000      Class :character   1st Qu.:0.0000   Fog      : 16  
+ Median : 4.000      Mode  :character   Median :0.0000   Fog-Rain : 13  
+ Mean   : 4.631                         Mean   :0.1051   Rain     :287  
+ 3rd Qu.: 6.000                         3rd Qu.:0.0900   Rain-Snow:  3  
+ Max.   :23.000                         Max.   :2.2000   Rain-TS  :  7  
+                                                         Snow     :  2  </code></pre>
+</div>
+</div>
+<p>Ok, so we have one <code>NA</code> for <code>Mean_Temperature_F</code>, <code>Max_Gust_Speed_MPH</code> seems to be represented as a character vector because it has <code>-</code> representing <code>NA</code> values, and we have 361 unlabelled <code>Events</code>.</p>
+<p>Max Gust Speed should be the easiest one to fix, so we’ll start there.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Max_Gust_Speed_MPH <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"-"</span>, <span class="dv">0</span>, weather<span class="sc">$</span>Max_Gust_Speed_MPH)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Max_Gust_Speed_MPH <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(weather<span class="sc">$</span>Max_Gust_Speed_MPH)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(weather<span class="sc">$</span>Max_Gust_Speed_MPH)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00   17.00   12.65   22.00   52.00     185 </code></pre>
+</div>
+</div>
+<p>Great! We changed any absent values for Maximum Gust Speed to 0 MPH and changed the variable type to a number. Uh oh, looks like there are still 185 <code>NA</code> values for Max Gust Speed. That’s a lot to try to replace. I would normally suggest generating a model that could try to predict those values based on other known values, but for now, we’ll just leave it alone.</p>
+<p>Since there is only one missing Mean Temperature, it seems the easiest way to fill in the hole is to look up what the average temperature was that day. Note: I certainly would not recommend this if it were any more than one <em>missing</em> value.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>weather[<span class="fu">which</span>(<span class="fu">is.na</span>(weather<span class="sc">$</span>Mean_Temperature_F)), <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2016-02-14"</code></pre>
+</div>
+</div>
+<p>Ok, so we’re looking for the Mean Temperature on February 14, 2016 in the zipcode 98101 (according to dataset documentation). Looks like the mean temperature that day was 50 degrees F.</p>
+<p>Time to substitute in that value.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>weather[<span class="dv">490</span>, <span class="st">"Mean_Temperature_F"</span>] <span class="ot">&lt;-</span> <span class="dv">50</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Perfect. Now what to do with the unlabelled <code>Event</code> categories. The dataset <code>ReadMe</code> file from Pronto! doesn’t include any information about this weather dataset. The only thing I can think to do is refer to the Event as <code>Other.</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Events <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^$"</span>, <span class="st">"Other"</span>, weather<span class="sc">$</span>Events)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>weather<span class="sc">$</span>Events <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(weather<span class="sc">$</span>Events)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ok, we’re in good shape. Now to do a few quick visualizations.</p>
+<section id="temperature" class="level2">
+<h2 class="anchored" data-anchor-id="temperature">Temperature</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph12" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph12-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;12: Line graph showing fluctuating daily minimum temperatures in Seattle</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph13" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph13-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;13: Line graph showing fluctuating daily mean temperatures in Seattle</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph14" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph14-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;14: Line graph showing fluctuating daily maximum temperatures in Seattle</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="events" class="level2">
+<h2 class="anchored" data-anchor-id="events">Events</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph15" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph15-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;15: Bar graph showing that the most common weather events were <code>Rain</code> and <code>Other</code>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="combining-weather-and-trip-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="combining-weather-and-trip-datasets">Combining Weather and Trip Datasets</h2>
+<p>Good, so we can now see some parts of the weather data. Let’s combine the weather data with our trip data. Let’s try a <code>left join</code> from the <code>dplyr</code> package.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a copy of the data frame</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>trip_3 <span class="ot">&lt;-</span> trip_2</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Change column name in trip_3 to match weather dataset</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>trip_3<span class="sc">$</span>Date <span class="ot">&lt;-</span> trip_3<span class="sc">$</span>start_date</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Left join the trip and weather dataframes by date.</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>trip_weather <span class="ot">&lt;-</span> <span class="fu">left_join</span>(trip_3, weather, <span class="at">by =</span> <span class="st">"Date"</span>)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(trip_weather)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="mean-temperature-vs.-number-of-trips" class="level2">
+<h2 class="anchored" data-anchor-id="mean-temperature-vs.-number-of-trips">Mean Temperature vs.&nbsp;Number of Trips</h2>
+<p>Ok. Now let’s see how the number of trips per day is influenced by weather (mean temperature, rounded to the nearest 5 degrees F).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph16" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph16-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;16: Line graph showing that the number of trips peaks when temperatures are around 50 degrees with higher or lower temperatures resulting in fewer rides.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Interesting! There are more trips when the weather is 50 F. I would have thought that to be too cold to want to ride. However, this figure may be influenced by the overall number of days that exhibited each mean temperature. Let us standardize.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>T1 <span class="ot">&lt;-</span> trip_weather  <span class="sc">|&gt;</span>  </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RoundedTemp =</span> <span class="fu">round</span>(Mean_Temperature_F<span class="sc">/</span><span class="dv">5</span>)<span class="sc">*</span><span class="dv">5</span>)  <span class="sc">|&gt;</span> </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(RoundedTemp)  <span class="sc">|&gt;</span>  </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">Days =</span> <span class="fu">n_distinct</span>(Date))  <span class="sc">|&gt;</span>  </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Ratio =</span> n<span class="sc">/</span>Days)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>T1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  RoundedTemp     n  Days Ratio
+        &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+1          35  1074     7  153.
+2          40  4522    19  238 
+3          45  5963    24  248.
+4          50 20081    74  271.
+5          55  9695    35  277 
+6          60  8393    26  323.
+7          65  1065     2  532.</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph17" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph17-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;17: Line graph showing that bike rides increased with an increase in temperature, relative to the number of days at each temperature.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>So when we standardize our measurements, correcting for the number of days that actually reached each temperature, we see a steady increase in the number of trips until around 65 F. People are more likely to ride a bike when it’s warm outside.</p>
+</section>
+<section id="precipitation-vs.-number-of-trips" class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-vs.-number-of-trips">Precipitation vs.&nbsp;Number of Trips</h2>
+<p>If you’ve ever heard of Seattle, you probably hear that it rains all the time there. Let’s see if that has an impact on the number of trips taken in a day.</p>
+<p>We’ll start with a figure standardized for number of days at a precipitation level, rounded to the nearest 0.2 inches.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>T2 <span class="ot">&lt;-</span> trip_weather <span class="sc">|&gt;</span>  </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RoundedPrecip =</span> <span class="fu">round</span>(Precipitation_In <span class="sc">/</span> <span class="fl">0.2</span>)<span class="sc">*</span><span class="fl">0.2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(RoundedPrecip) <span class="sc">|&gt;</span>  </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">Days =</span> <span class="fu">n_distinct</span>(Date)) <span class="sc">|&gt;</span>  </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Ratio =</span> n<span class="sc">/</span>Days)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>T2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  RoundedPrecip     n  Days Ratio
+          &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+1           0   37773   129  293.
+2           0.2  6558    27  243.
+3           0.4  3777    15  252.
+4           0.6  1393     7  199 
+5           0.8  1055     6  176.
+6           1.4   203     2  102.
+7           2.2    34     1   34 </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-graph18" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="BikeSharing_files/figure-html/fig-graph18-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;18: Line graph showing that the number of trips dropped as the precipitation level increased.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Looks like even Seattleites have a limit when it comes to riding a bike in the rain. The more it rained, the fewer trips were taken per day.</p>
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a></div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
