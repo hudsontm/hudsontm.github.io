@@ -1,7 +1,7 @@
 {
-  "hash": "d5eb79acdb58a93a9f53d2e0e85d8f8c",
+  "hash": "84f44524b644e34ba146c1720820983b",
   "result": {
-    "markdown": "---\ntitle: \"About Me\"\n---\n\n\nThis is where you get to write about yourself.\n\nIf your favorite color is purple you might show a graph that uses purple.\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](about_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n",
+    "markdown": "---\ntitle: \"About Me\"\n---\n\n\nMy name is Thomas Hudson. I will graduate from Appalachian State University majoring in computer science with minors in mathematics and statistics. This a continuous project for my Intro to Data Management and Visual class and will be continuosly improved upon through out the fall 2024 semester.\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](about_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::",
     "supporting": [
       "about_files"
     ],

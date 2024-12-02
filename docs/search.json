@@ -1,10 +1,38 @@
 [
   {
-    "objectID": "project.html",
-    "href": "project.html",
-    "title": "Projects",
-    "section": "",
-    "text": "Project 1\nProject 2\nProject 3\nProject 4"
+    "objectID": "RevealTS.html#video-here",
+    "href": "RevealTS.html#video-here",
+    "title": "Combining Data Frames Exercises",
+    "section": "Video here",
+    "text": "Video here"
+  },
+  {
+    "objectID": "RevealTS.html#problem-1.",
+    "href": "RevealTS.html#problem-1.",
+    "title": "Combining Data Frames Exercises",
+    "section": "Problem 1.",
+    "text": "Problem 1.\nLeft joined on country_name\n\nhappy %&gt;% \n  left_join(happy_join)\n\nJoining with `by = join_by(country_name)`\n\n\n# A tibble: 5 × 5\n  country_name ladder_score   gdp social_support healthy_life_expectancy\n  &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;                   &lt;dbl&gt;\n1 Iraq                 4.85  9.24          0.746                    60.6\n2 Comoros              4.29  8.03          0.626                    57.3\n3 Panama               6.18 10.4           0.896                    69.7\n4 Maldives             5.20  9.83          0.913                    70.6\n5 Spain                6.49 10.6           0.932                    NA"
+  },
+  {
+    "objectID": "RevealTS.html#problem-2",
+    "href": "RevealTS.html#problem-2",
+    "title": "Combining Data Frames Exercises",
+    "section": "Problem 2",
+    "text": "Problem 2\nRight joined on country_name\n\nhappy %&gt;% \n  right_join(happy_join)\n\nJoining with `by = join_by(country_name)`\n\n\n# A tibble: 9 × 5\n  country_name ladder_score   gdp social_support healthy_life_expectancy\n  &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;                   &lt;dbl&gt;\n1 Iraq                 4.85  9.24          0.746                    60.6\n2 Comoros              4.29  8.03          0.626                    57.3\n3 Panama               6.18 10.4           0.896                    69.7\n4 Maldives             5.20  9.83          0.913                    70.6\n5 Bangladesh          NA    NA            NA                        64.8\n6 Australia           NA    NA            NA                        73.9\n7 Iran                NA    NA            NA                        66.3\n8 Vietnam             NA    NA            NA                        68.0\n9 Sweden              NA    NA            NA                        72.7"
+  },
+  {
+    "objectID": "RevealTS.html#problem-3",
+    "href": "RevealTS.html#problem-3",
+    "title": "Combining Data Frames Exercises",
+    "section": "Problem 3",
+    "text": "Problem 3\nInner joined on country_name\n\nhappy %&gt;% \n  inner_join(happy_join)\n\nJoining with `by = join_by(country_name)`\n\n\n# A tibble: 4 × 5\n  country_name ladder_score   gdp social_support healthy_life_expectancy\n  &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;                   &lt;dbl&gt;\n1 Iraq                 4.85  9.24          0.746                    60.6\n2 Comoros              4.29  8.03          0.626                    57.3\n3 Panama               6.18 10.4           0.896                    69.7\n4 Maldives             5.20  9.83          0.913                    70.6"
+  },
+  {
+    "objectID": "RevealTS.html#problem-4",
+    "href": "RevealTS.html#problem-4",
+    "title": "Combining Data Frames Exercises",
+    "section": "Problem 4",
+    "text": "Problem 4\nFull joined on country_name\n\nhappy %&gt;% \n  full_join(happy_join)\n\nJoining with `by = join_by(country_name)`\n\n\n# A tibble: 10 × 5\n   country_name ladder_score   gdp social_support healthy_life_expectancy\n   &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;                   &lt;dbl&gt;\n 1 Iraq                 4.85  9.24          0.746                    60.6\n 2 Comoros              4.29  8.03          0.626                    57.3\n 3 Panama               6.18 10.4           0.896                    69.7\n 4 Maldives             5.20  9.83          0.913                    70.6\n 5 Spain                6.49 10.6           0.932                    NA  \n 6 Bangladesh          NA    NA            NA                        64.8\n 7 Australia           NA    NA            NA                        73.9\n 8 Iran                NA    NA            NA                        66.3\n 9 Vietnam             NA    NA            NA                        68.0\n10 Sweden              NA    NA            NA                        72.7"
   },
   {
     "objectID": "index.html",
@@ -18,6 +46,13 @@
     "href": "about.html",
     "title": "About Me",
     "section": "",
-    "text": "This is where you get to write about yourself.\nIf your favorite color is purple you might show a graph that uses purple."
+    "text": "My name is Thomas Hudson. I will graduate from Appalachian State University majoring in computer science with minors in mathematics and statistics. This a continuous project for my Intro to Data Management and Visual class and will be continuosly improved upon through out the fall 2024 semester."
+  },
+  {
+    "objectID": "project.html",
+    "href": "project.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Joining tables with left, right, inner, and full joins\nBicycle Sharing Replication Demo"
   }
 ]

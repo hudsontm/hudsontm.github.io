@@ -1,0 +1,47 @@
+---
+title: "Combining Data Frames Exercises"
+author: "Thomas Hudson"
+format: revealjs
+---
+
+```{r, message= FALSE}
+library(dplyr)
+library(tidybiology)
+```
+***
+## Video [here](https://www.youtube.com/watch?v=kLgZYO3tcYA)
+
+*** 
+## Problem 1.
+
+Left joined on country_name
+
+```{r}
+happy %>% 
+  left_join(happy_join)
+```
+
+***
+## Problem 2
+
+Right joined on country_name
+```{r}
+happy %>% 
+  right_join(happy_join)
+```
+
+***
+## Problem 3
+Inner joined on country_name
+```{r}
+happy %>% 
+  inner_join(happy_join)
+```
+
+## Problem 4
+Full joined on country_name
+```{r}
+happy %>% 
+  full_join(happy_join)
+```
+

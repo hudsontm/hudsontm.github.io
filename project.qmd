@@ -2,7 +2,5 @@
 title: "Projects"
 ---
 
-* [Project 1]()
-* [Project 2]()
-* [Project 3]()
-* [Project 4]()
+* [Joining tables with left, right, inner, and full joins](RevealTS.qmd)
+* [Bicycle Sharing Replication Demo](https://stt2860-f2024.github.io/bicycle-sharing-hudsontm/BikeSharing.html)
