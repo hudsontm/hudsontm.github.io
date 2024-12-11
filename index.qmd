@@ -9,4 +9,3 @@ This is the main landing page!
 * To learn more about [Quarto websites](https://quarto.org/docs/websites).
 
 
-hi

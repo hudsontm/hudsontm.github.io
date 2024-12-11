@@ -4,3 +4,4 @@ title: "Projects"
 
 * [Joining tables with left, right, inner, and full joins](RevealTS.qmd)
 * [Bicycle Sharing Replication Demo](https://stt2860-f2024.github.io/bicycle-sharing-hudsontm/BikeSharing.html)
+* [Final Project](https://hudsontm.github.io/NFLAnalysis/fantasyPlayerAnalysis.html)

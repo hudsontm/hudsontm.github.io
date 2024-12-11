@@ -39,7 +39,7 @@
     "href": "index.html",
     "title": "Quarto Web Demo",
     "section": "",
-    "text": "This is the main landing page!\n\nTo learn more about geezers.\nTo learn more about Quarto websites.\n\nhi"
+    "text": "This is the main landing page!\n\nTo learn more about geezers.\nTo learn more about Quarto websites."
   },
   {
     "objectID": "about.html",
@@ -53,6 +53,6 @@
     "href": "project.html",
     "title": "Projects",
     "section": "",
-    "text": "Joining tables with left, right, inner, and full joins\nBicycle Sharing Replication Demo"
+    "text": "Joining tables with left, right, inner, and full joins\nBicycle Sharing Replication Demo\nFinal Project"
   }
 ]
